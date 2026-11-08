@@ -1,0 +1,71 @@
+<section class="py-5 bg-body-tertiary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h3 mb-4 text-center">Iniciar sesión</h1>
+
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  [class.is-invalid]="
+                    (form.controls.email.touched && form.controls.email.invalid) ||
+                    serverErrors()['email']
+                  "
+                />
+                <div class="invalid-feedback">
+                  @if (form.controls.email.hasError('required')) {
+                    El correo es obligatorio
+                  } @else if (form.controls.email.hasError('email')) {
+                    Escribe un correo válido
+                  }
+                  @if (serverErrors()['email']) {
+                    {{ serverErrors()['email'] }}
+                  }
+                </div>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="mb-4">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                  id="password"
+                  type="password"
+                  class="form-control"
+                  formControlName="password"
+                  [class.is-invalid]="
+                    (form.controls.password.touched && form.controls.password.invalid) ||
+                    serverErrors()['password']
+                  "
+                />
+                <div class="invalid-feedback">
+                  @if (form.controls.password.hasError('required')) {
+                    La contraseña es obligatoria
+                  }
+                  @if (serverErrors()['password']) {
+                    {{ serverErrors()['password'] }}
+                  }
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100" [disabled]="isSubmitting()">
+                Entrar
+              </button>
+            </form>
+
+            <p class="text-center mt-3 mb-0">
+              ¿No tienes cuenta? <a routerLink="/registro">Regístrate</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,223 @@
+<section class="py-5 bg-body-tertiary">
+  <div class="container">
+    <h1 class="mb-4">Mis motos</h1>
+
+    <!-- FORMULARIO: crear / editar -->
+    <div class="card shadow-sm mb-5">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">{{ editingId() ? 'Editar moto' : 'Registrar moto' }}</h2>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="row g-3">
+          <div class="col-md-6">
+            <label for="placa" class="form-label">Placa</label>
+            <input
+              id="placa"
+              type="text"
+              class="form-control"
+              formControlName="placa"
+              placeholder="ABC12D"
+              [class.is-invalid]="
+                (form.controls.placa.touched && form.controls.placa.invalid) ||
+                serverErrors()['placa']
+              "
+            />
+            <div class="invalid-feedback">
+              @if (form.controls.placa.hasError('required')) {
+                La placa es obligatoria
+              } @else if (form.controls.placa.hasError('minlength')) {
+                La placa debe tener entre 5 y 6 caracteres
+              } @else if (form.controls.placa.hasError('maxlength')) {
+                La placa debe tener entre 5 y 6 caracteres
+              }
+              @if (serverErrors()['placa']) {
+                {{ serverErrors()['placa'] }}
+              }
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="marca" class="form-label">Marca</label>
+            <input
+              id="marca"
+              type="text"
+              class="form-control"
+              formControlName="marca"
+              placeholder="Yamaha"
+              [class.is-invalid]="
+                (form.controls.marca.touched && form.controls.marca.invalid) ||
+                serverErrors()['marca']
+              "
+            />
+            <div class="invalid-feedback">
+              @if (form.controls.marca.hasError('required')) {
+                La marca es obligatoria
+              }
+              @if (serverErrors()['marca']) {
+                {{ serverErrors()['marca'] }}
+              }
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="modelo" class="form-label">Modelo</label>
+            <input
+              id="modelo"
+              type="text"
+              class="form-control"
+              formControlName="modelo"
+              placeholder="FZ 2.0"
+              [class.is-invalid]="
+                (form.controls.modelo.touched && form.controls.modelo.invalid) ||
+                serverErrors()['modelo']
+              "
+            />
+            <div class="invalid-feedback">
+              @if (form.controls.modelo.hasError('required')) {
+                El modelo es obligatorio
+              }
+              @if (serverErrors()['modelo']) {
+                {{ serverErrors()['modelo'] }}
+              }
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <label for="kilometraje" class="form-label">Kilometraje</label>
+            <input
+              id="kilometraje"
+              type="number"
+              class="form-control"
+              formControlName="kilometraje"
+              min="0"
+              [class.is-invalid]="
+                (form.controls.kilometraje.touched && form.controls.kilometraje.invalid) ||
+                serverErrors()['kilometraje']
+              "
+            />
+            <div class="invalid-feedback">
+              @if (form.controls.kilometraje.hasError('required')) {
+                El kilometraje es obligatorio
+              } @else if (form.controls.kilometraje.hasError('min')) {
+                El kilometraje no puede ser negativo
+              }
+              @if (serverErrors()['kilometraje']) {
+                {{ serverErrors()['kilometraje'] }}
+              }
+            </div>
+          </div>
+
+          <div class="col-12">
+            <button type="submit" class="btn btn-primary">
+              {{ editingId() ? 'Actualizar' : 'Guardar' }}
+            </button>
+            @if (editingId()) {
+              <button type="button" class="btn btn-outline-secondary ms-2" (click)="resetForm()">
+                Cancelar
+              </button>
+            }
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- LISTADO EN TARJETAS -->
+    @if (isLoading()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+      </div>
+    } @else {
+      <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @for (moto of motos(); track moto._id) {
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <div class="card-header">
+                <span class="badge bg-acento fs-6">{{ moto.placa }}</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title h5">{{ moto.marca }} {{ moto.modelo }}</h3>
+                <p class="card-text text-body-secondary">{{ moto.kilometraje | number }} km</p>
+              </div>
+              <div class="card-footer bg-transparent d-flex gap-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  data-bs-toggle="modal"
+                  data-bs-target="#detalleMoto"
+                  (click)="verDetalle(moto._id)"
+                >
+                  Ver detalle
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  (click)="startEdit(moto)"
+                >
+                  Editar
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="eliminar(moto)"
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="col-12">
+            <p class="text-body-secondary">Aún no has registrado motos.</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</section>
+
+<!-- MODAL DE DETALLE (uno solo para toda la página) -->
+<div
+  class="modal fade"
+  id="detalleMoto"
+  tabindex="-1"
+  aria-labelledby="detalleMotoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5" id="detalleMotoLabel">Detalle de la moto</h2>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"
+        ></button>
+      </div>
+      <div class="modal-body">
+        @if (selectedMoto(); as moto) {
+          <dl class="row mb-0">
+            <dt class="col-sm-5">Placa</dt>
+            <dd class="col-sm-7">{{ moto.placa }}</dd>
+            <dt class="col-sm-5">Marca</dt>
+            <dd class="col-sm-7">{{ moto.marca }}</dd>
+            <dt class="col-sm-5">Modelo</dt>
+            <dd class="col-sm-7">{{ moto.modelo }}</dd>
+            <dt class="col-sm-5">Kilometraje</dt>
+            <dd class="col-sm-7">{{ moto.kilometraje | number }} km</dd>
+            <dt class="col-sm-5">Registrada el</dt>
+            <dd class="col-sm-7">{{ moto.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+            <dt class="col-sm-5">Última actualización</dt>
+            <dd class="col-sm-7">{{ moto.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+          </dl>
+        } @else {
+          <div class="text-center py-3">
+            <div class="spinner-border text-primary" role="status"></div>
+          </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

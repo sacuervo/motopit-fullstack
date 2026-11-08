@@ -1,0 +1,101 @@
+<section class="py-5 bg-body-tertiary">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-5">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <h1 class="h3 mb-4 text-center">Crea tu cuenta</h1>
+
+            <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+              <!-- Nombre -->
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input
+                  id="nombre"
+                  type="text"
+                  class="form-control"
+                  formControlName="nombre"
+                  [class.is-invalid]="
+                    (form.controls.nombre.touched && form.controls.nombre.invalid) ||
+                    serverErrors()['nombre']
+                  "
+                />
+                <div class="invalid-feedback">
+                  @if (form.controls.nombre.hasError('required')) {
+                    El nombre es obligatorio
+                  } @else if (form.controls.nombre.hasError('minlength')) {
+                    El nombre debe tener mínimo 3 caracteres
+                  }
+                  @if (serverErrors()['nombre']) {
+                    {{ serverErrors()['nombre'] }}
+                  }
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input
+                  id="email"
+                  type="email"
+                  class="form-control"
+                  formControlName="email"
+                  [class.is-invalid]="
+                    (form.controls.email.touched && form.controls.email.invalid) ||
+                    serverErrors()['email']
+                  "
+                />
+                <div class="invalid-feedback">
+                  @if (form.controls.email.hasError('required')) {
+                    El correo es obligatorio
+                  } @else if (form.controls.email.hasError('email')) {
+                    Escribe un correo válido
+                  }
+                  @if (serverErrors()['email']) {
+                    {{ serverErrors()['email'] }}
+                  }
+                </div>
+              </div>
+
+              <!-- Contraseña -->
+              <div class="mb-4">
+                <label for="password" class="form-label">Contraseña</label>
+                <input
+                  id="password"
+                  type="password"
+                  class="form-control"
+                  formControlName="password"
+                  [class.is-invalid]="
+                    (form.controls.password.touched && form.controls.password.invalid) ||
+                    serverErrors()['password']
+                  "
+                />
+                <div class="form-text">
+                  Mínimo 8 caracteres, con mayúscula, minúscula, número y símbolo.
+                </div>
+                <div class="invalid-feedback">
+                  @if (form.controls.password.hasError('required')) {
+                    La contraseña es obligatoria
+                  } @else if (form.controls.password.hasError('pattern')) {
+                    La contraseña no cumple los requisitos
+                  }
+                  @if (serverErrors()['password']) {
+                    {{ serverErrors()['password'] }}
+                  }
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary w-100" [disabled]="isSubmitting()">
+                Registrarme
+              </button>
+            </form>
+
+            <p class="text-center mt-3 mb-0">
+              ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
