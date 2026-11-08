@@ -1,0 +1,396 @@
+{
+  "info": {
+    "_postman_id": "78256582-727e-4315-a798-9f8a6a0b136d",
+    "name": "MotoPit API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "27970275"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "1. Registro OK",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Santiago Cuervo\",\r\n    \"email\": \"santiago@motopit.com\",\r\n    \"password\": \"MotoPit2026*\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Registro Duplicado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\": \"Santiago Cuervo\",\r\n    \"email\": \"santiago@motopit.com\",\r\n    \"password\": \"MotoPit2026*\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Registro Inválido",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nombre\":\"Sa\",\r\n    \"email\":\"correo-malo\",\r\n    \"password\":\"123\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Login OK",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('token', pm.response.json().token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"santiago@motopit.com\",\r\n    \"password\": \"MotoPit2026*\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Login Usuario No Existe",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"nadie@motopit.com\",\r\n    \"password\":\"MotoPit2026*\"\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Login Contraseña Incorrecta",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"santiago@motopit.com\",\r\n    \"password\":\"Otra1234*\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Login Vacío",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Motos",
+      "item": [
+        {
+          "name": "8. Consulta Motos Sin Login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "9. Consulta Motos Token Inválido",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer tokenfalso123"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/motos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "10. Crear moto",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"placa\":\"ABC12D\",\r\n    \"marca\":\"Yamaha\",\r\n    \"modelo\":\"FZ 2.0\",\r\n    \"kilometraje\":45200\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/motos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "11. Crear moto inválida",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"placa\":\"A1\",\r\n    \"marca\":\"\",\r\n    \"kilometraje\":-5\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/motos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "12. Listar Motos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "13. Obtener Moto pte.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "14. Moto no encontrada",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/motos/64b000000000000000000000",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos", "64b000000000000000000000"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "15. ID mal formado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/motos/123",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos", "123"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "16. Actualizar Moto pte",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"placa\":\"ABC12D\",\r\n    \"marca\":\"Yamaha\",\r\n    \"modelo\":\"FZ 2.0\",\r\n    \"kilometraje\":47800\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/motos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "17. Eliminar Moto pte",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/motos/",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "18. Eliminar Moto No Existente pte",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/motos",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "motos"]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "bearer",
+        "bearer": [
+          {
+            "key": "token",
+            "value": "",
+            "type": "string"
+          }
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
